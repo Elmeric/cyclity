@@ -20,10 +20,10 @@ const headerLinks = shallowRef([
   },
 ]);
 const wallPaper = shallowRef({
-  imgFallback: "src/assets/images/home_wallpaper.jpg",
+  imgFallback: "src/assets/images/wavy-blue-background-1024.jpg",
   sourcePaths: [
-    "src/assets/images/home_wallpaper.avif",
-    "src/assets/images/home_wallpaper.webp",
+    "src/assets/images/wavy-blue-background-1024.avif",
+    "src/assets/images/wavy-blue-background-1024.webp",
   ],
 });
 </script>
@@ -101,21 +101,15 @@ const wallPaper = shallowRef({
   </v-toolbar>
 
   <v-main class="background">
-    <v-row no-gutters height="100%">
-      <v-col cols="6" md="4" class="hidden-xs">
-        <HomeWallpaper
-          :img-fallback="wallPaper.imgFallback"
-          :source-paths="wallPaper.sourcePaths"
-        />
-      </v-col>
-
-      <v-col cols="12" sm="6" md="4">
+    <v-row class="position-relative bg-home" no-gutters>
+      <v-col cols="12" class="d-flex align-center">
         <v-sheet
-          class="d-flex flex-wrap align-center justify-center text-center mx-auto px-4"
+          class="d-flex flex-wrap align-center justify-center text-center mx-auto"
           elevation="0"
           height="calc(100dvh - 96px)"
+          color="transparent"
         >
-          <div>
+          <div class="pa-4 bg-surface rounded-xl">
             <v-icon icon="mdi-bike" color="primary" size="x-large"></v-icon>
 
             <h2 class="text-h4 font-weight-black text-primary mb-4">
@@ -172,15 +166,36 @@ const wallPaper = shallowRef({
           </div>
         </v-sheet>
       </v-col>
-
-      <v-col cols="4" class="hidden-sm-and-down">
-        <HomeWallpaper
-          :img-fallback="wallPaper.imgFallback"
-          :source-paths="wallPaper.sourcePaths"
-        />
-      </v-col>
     </v-row>
   </v-main>
 
   <AuthFooter />
 </template>
+
+<style lang="scss">
+.loginBox {
+  max-width: 475px;
+  margin: 0 auto;
+}
+.bg-home {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* Fallback */
+  background-image: url("src/assets/images/wavy-blue-background-1024.jpg");
+
+  /* Prefixed */
+  background-image: -webkit-image-set(
+    url("src/assets/images/wavy-blue-background-1024.avif") type("image/avif"),
+    url("src/assets/images/wavy-blue-background-1024.webp") type("image/webp"),
+    url("src/assets/images/wavy-blue-background-1024.jpg") type("image/jpeg")
+  );
+
+  /* Default */
+  background-image: image-set(
+    url("src/assets/images/wavy-blue-background-1024.avif") type("image/avif"),
+    url("src/assets/images/wavy-blue-background-1024.webp") type("image/webp"),
+    url("src/assets/images/wavy-blue-background-1024.jpg") type("image/jpeg")
+  );
+}
+</style>
