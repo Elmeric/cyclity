@@ -54,10 +54,11 @@ router.beforeEach(() => {
   const uiStore = useUIStore();
   uiStore.isLoading = true;
   console.log("is loading");
+  setTimeout(() => uiStore.isLoading = false, 1500)
 });
 
-router.afterEach(() => {
-  const uiStore = useUIStore();
-  uiStore.isLoading = false;
-  console.log("Loaded");
-});
+// router.afterEach(() => {
+//   const uiStore = useUIStore();
+//   uiStore.isLoading = false;
+//   console.log("Loaded");
+// });

@@ -1,16 +1,17 @@
 const HomeRoutes = {
-  path: "/",
+  path: "/home",
   meta: {
     requireAuth: false,
   },
-  component: () => import("@/layouts/HomeLayout.vue"),
-  // children: [
-  //     {
-  //       name: 'LandingPage',
-  //       path: '/',
-  //       component: () => import('@/views/Home.vue')
-  //     },
-  // ]
+  redirect: "/",
+  component: () => import("@/layouts/home/HomeLayout.vue"),
+  children: [
+      {
+        name: 'Home',
+        path: '/',
+        component: () => import('@/views/HomePage.vue')
+      },
+  ]
 };
 
 export default HomeRoutes;
