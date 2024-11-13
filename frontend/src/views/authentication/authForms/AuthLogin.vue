@@ -1,135 +1,130 @@
 <script setup lang="ts">
+
 import { ref } from "vue";
-// icons
-// import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons-vue";
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/yup";
+import * as yup from "yup"
 import { useAuthStore } from "@/stores";
-import { Form } from "vee-validate";
 
-const checkbox = ref(false);
-const valid = ref(false);
-const show1 = ref(false);
-const password = ref("admin123");
-const username = ref("info@codedthemes.com");
-const passwordRules = ref([
-  (v: string) => !!v || "Password is required",
-  (v: string) => (v && v.length <= 10) || "Password must be less than 10 characters",
-]);
-const emailRules = ref([
-  (v: string) => !!v || "E-mail is required",
-  (v: string) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-]);
+const schema = toTypedSchema(
+  yup.object({
+    email: yup.string().email().required(),
+    password: yup.string().min(8).max(64).required(),
+    keepMe: yup.boolean().default(false)
+  })
+);
+const authStore = useAuthStore();
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function validate(values: any, { setErrors }: any) {
+const { meta, errors, handleSubmit, isSubmitting, defineField } = useForm({
+  validationSchema: schema,
+  initialValues: {
+    email: authStore.user ? authStore.user.username : "", //"info@codedthemes.com",
+    password: "admin123",
+    keepMe: authStore.user ? authStore.user.keepMe : false,
+  },
+});
+
+const [email, emailAttrs] = defineField("email");
+const [password, passwordAttrs] = defineField("password");
+const [keepMe, keepMeAttrs] = defineField("keepMe");
+
+const onSubmit = handleSubmit(async (values, { setFieldError }) => {
   const authStore = useAuthStore();
-  return authStore
-    .login(username.value, password.value)
-    .catch((error) => setErrors({ apiError: error }));
-}
+  // console.log(values.keepMe)
+  try {
+    return await authStore
+      .login(values.email, values.password, values.keepMe);
+  } catch (error) {
+    setFieldError("email", "Incorrect email or password");
+    setFieldError("password", "Incorrect email or password");
+  }
+})
+
+const visible = ref(false);
+
 </script>
 
 <template>
-  <div class="d-flex justify-space-between align-center">
-    <h3 class="text-h3 text-center mb-0">Login</h3>
-    <router-link to="/auth/register" class="text-primary text-decoration-none"
-      >Don't Have an account?</router-link
-    >
-  </div>
-  <Form @submit="validate" class="mt-7 loginForm" v-slot="{ errors, isSubmitting }">
+  <h3 class="text-h3 text-primary mb-0">Login</h3>
+  <form @submit.prevent="onSubmit" class="mt-7">
     <div class="mb-6">
-      <v-label>Email Address</v-label>
+      <div 
+        class="d-flex align-center justify-space-between
+          text-subtitle-1 text-medium-emphasis"
+      >
+        Account
+        <router-link to="/auth/register" class="text-primary text-decoration-none"
+          >Don't have an account?
+        </router-link>
+      </div>
       <v-text-field
         aria-label="email address"
-        v-model="username"
-        :rules="emailRules"
-        class="mt-2"
+        v-model="email"
+        v-bind="emailAttrs"
+        :error-messages="errors.email"
+        placeholder="Email address"
+        prepend-inner-icon="mdi-email-outline"
         required
-        hide-details="auto"
+        density="compact"
         variant="outlined"
+        hide-details="auto"
         color="primary"
+        class="mt-2"
       ></v-text-field>
     </div>
+    
     <div>
-      <v-label>Password</v-label>
+      <div
+        class="d-flex align-center justify-space-between
+          text-subtitle-1 text-medium-emphasis"
+        >
+        Password
+        <router-link to="/auth/login" class="text-primary text-decoration-none">
+          Forgot Password?
+        </router-link>
+      </div>
       <v-text-field
         aria-label="password"
+        :type="visible ? 'text' : 'password'"
         v-model="password"
-        :rules="passwordRules"
+        v-bind="passwordAttrs"
+        :error-messages="errors.password"
+        :append-inner-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append-inner="visible = !visible"
+        placeholder="Enter your password"
+        prepend-inner-icon="mdi-lock-outline"
         required
+        density="compact"
         variant="outlined"
-        color="primary"
         hide-details="auto"
-        :type="show1 ? 'text' : 'password'"
+        color="primary"
         class="mt-2"
-      >
-        <template v-slot:append-inner>
-          <v-btn color="secondary" icon rounded variant="text">
-            <v-icon
-              v-if="show1 == false"
-              @click="show1 = !show1"
-              icon="mdi-eye-off"
-            end
-            >
-            </v-icon>
-            <v-icon
-              v-if="show1 == true"
-              @click="show1 = !show1"
-              icon="mdi-eye"
-            end
-            >
-            </v-icon>
-            <!-- <EyeInvisibleOutlined
-              :style="{ color: 'rgb(var(--v-theme-secondary))' }"
-              v-if="show1 == false"
-              @click="show1 = !show1"
-            />
-            <EyeOutlined
-              :style="{ color: 'rgb(var(--v-theme-secondary))' }"
-              v-if="show1 == true"
-              @click="show1 = !show1"
-            /> -->
-          </v-btn>
-        </template>
-      </v-text-field>
+      ></v-text-field>
     </div>
 
     <div class="d-flex align-center mt-4 mb-7 mb-sm-0">
       <v-checkbox
-        v-model="checkbox"
-        :rules="[(v: any) => !!v || 'You must agree to continue!']"
+        v-model="keepMe"
+        v-bind="keepMeAttrs"
         label="Keep me sign in"
-        required
+        hide-details
         color="primary"
         class="ms-n2"
-        hide-details
       ></v-checkbox>
-      <div class="ml-auto">
-        <router-link to="/auth/login" class="text-darkText link-hover"
-          >Forgot Password?</router-link
-        >
-      </div>
     </div>
+
     <v-btn
-      color="primary"
-      :loading="isSubmitting"
-      block
-      class="mt-5"
+      type="submit"
       variant="flat"
       size="large"
-      :disabled="valid"
-      type="submit"
+      block
+      color="primary"
+      :loading="isSubmitting"
+      :disabled="!meta.valid"
+      class="mt-5"
     >
-      Login</v-btn
-    >
-    <div v-if="errors.apiError" class="mt-2">
-      <v-alert color="error">{{ errors.apiError }}</v-alert>
-    </div>
-  </Form>
+      Log in
+    </v-btn>
+  </form>
+
 </template>
-<style lang="scss">
-.loginForm {
-  .v-text-field .v-field--active input {
-    font-weight: 500;
-  }
-}
-</style>

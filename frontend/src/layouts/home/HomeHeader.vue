@@ -26,10 +26,16 @@ const { isLoading } = storeToRefs(uiStore);
 </script>
 
 <template>
-<v-toolbar color="surface" density="default" flat class="px-2 text-primary">
+  <v-toolbar color="surface" density="default" flat class="px-2 text-primary">
     <v-toolbar-title class="text-h4 font-weight-black">
-      <v-icon icon="mdi-bike" color="primary" class="me-2"></v-icon>
-      {{ appTitle }}
+      <RouterLink 
+        to="/home" 
+        aria-label="logo" 
+        class="text-h4 font-weight-black text-primary text-decoration-none"
+      >
+        <v-icon icon="mdi-bike" color="primary" class="me-2"></v-icon>
+        {{ appTitle }}
+      </RouterLink>
     </v-toolbar-title>
 
     <ToolbarProgressIndicator :loading="isLoading" color="primary" />
@@ -57,7 +63,7 @@ const { isLoading } = storeToRefs(uiStore);
         size="x-large"
         class="mx-16"
       >
-        Sign in
+        Log in
       </v-btn>
     </v-toolbar-items>
 
@@ -92,7 +98,7 @@ const { isLoading } = storeToRefs(uiStore);
             variant="elevated"
             color="secondary"
           >
-            Sign in
+            Log in
           </v-btn>
         </v-list-item>
       </v-list>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Logo from '@/layouts/dashboard/logo/LogoDark.vue';
 import AuthRegister from '../authForms/AuthRegister.vue';
-import AuthFooter from './AuthFooter.vue';
+import AuthFooter from '@/layouts/home/HomeFooter.vue';
 </script>
 
 <template>

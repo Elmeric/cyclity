@@ -16,7 +16,7 @@ const footerLinks = shallowRef([
 </script>
 
 <template>
-  <v-footer height="2.5rem">
+  <v-footer min-height="2.5rem">
     <v-row justify="center" no-gutters>
       <v-col cols="12" md="6" class="text-md-left text-center">
         <p class="text-subtitle-2 mb-md-0 mb-4">

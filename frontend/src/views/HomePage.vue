@@ -28,7 +28,7 @@
                 color="secondary  font-weight-bold"
                 size="small"
               >
-                Sign in
+                Log in
               </v-btn>
             </span>
           </p>
@@ -66,27 +66,3 @@
     </v-col>
   </v-row>
 </template>
-
-<style lang="scss">
-.bg-home {
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  /* Fallback */
-  background-image: url("src/assets/images/wavy-blue-background-1024.jpg");
-
-  /* Prefixed */
-  background-image: -webkit-image-set(
-    url("src/assets/images/wavy-blue-background-1024.avif") type("image/avif"),
-    url("src/assets/images/wavy-blue-background-1024.webp") type("image/webp"),
-    url("src/assets/images/wavy-blue-background-1024.jpg") type("image/jpeg")
-  );
-
-  /* Default */
-  background-image: image-set(
-    url("src/assets/images/wavy-blue-background-1024.avif") type("image/avif"),
-    url("src/assets/images/wavy-blue-background-1024.webp") type("image/webp"),
-    url("src/assets/images/wavy-blue-background-1024.jpg") type("image/jpeg")
-  );
-}
-</style>
